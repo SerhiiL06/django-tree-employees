@@ -12,6 +12,7 @@ class Employee(MPTTModel):
         ("position_5", "position_5"),
         ("position_6", "position_6"),
         ("position_7", "position_7"),
+        ("position_8", "position_8"),
     )
 
     first_name = models.CharField(max_length=100)
@@ -30,3 +31,7 @@ class Employee(MPTTModel):
         blank=True,
         related_name="workmates",
     )
+
+    class MPTTMeta:
+        parent_attr = "boss"
+        order_insertion_by = ["last_name"]
