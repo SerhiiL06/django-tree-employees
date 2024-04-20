@@ -3,12 +3,12 @@
 {% block title %}Employee List{% endblock title %}
 
 {% block content %}
-<ul class="list-group">
+<ul class="root">
     {% recursetree object_list %}
-        <li class="list-group-item">
+        <li>
             {{ node.first_name }}
             {% if not node.is_leaf_node %}
-                <ul class="list-group children">
+                <ul class="children">
                     {{ children }}
                 </ul>
             {% endif %}
