@@ -1,7 +1,6 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
-
 POSITION_CHOICES = (
     ("position_1", "position_1"),
     ("position_2", "position_2"),

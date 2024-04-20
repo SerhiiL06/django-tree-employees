@@ -1,13 +1,15 @@
+from datetime import datetime
 from typing import Any
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db.models.query import QuerySet
+from django.db.transaction import atomic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from django.db.transaction import atomic
+
 from .forms import CreateAndUpdateEmployeeForm
 from .models import Employee
 from .utils import change_boss
@@ -18,7 +20,11 @@ class EmployeesTreeView(ListView):
     model = Employee
 
     def get_queryset(self) -> QuerySet[Any]:
-        return Employee.objects.filter(level__lte=5)[:1000]
+        if self.request.GET.get("full"):
+            queryset = Employee.objects.filter(level__lt=10)[:20000]
+        else:
+            queryset = Employee.objects.filter(level__lt=2)[:5000]
+        return queryset
 
 
 class EmployeeListView(ListView):
@@ -29,16 +35,22 @@ class EmployeeListView(ListView):
     def get_queryset(self) -> QuerySet[Any]:
         queryset = super().get_queryset()
 
-        if self.request.GET.get("search"):
-            search_text = self.request.GET.get("search")
+        params = self.request.GET
+
+        if params.get("search"):
+            search_text = params.get("search")
             queryset = queryset.filter(
                 Q(first_name__icontains=search_text)
                 | Q(last_name__icontains=search_text)
                 | Q(middle_name__icontains=search_text)
             )
 
-        if self.request.GET.get("order"):
-            order_fields = self.request.GET.get("order")
+        if params.get("date"):
+            d = datetime.strptime(params.get("date"), "%Y-%m-%d").date()
+            queryset = queryset.filter(employment_at=d)
+
+        if params.get("order"):
+            order_fields = params.get("order")
             queryset = queryset.order_by(order_fields)
 
         return queryset

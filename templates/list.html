@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}Employee List{% endblock title %}Employee List
-{% block css %} <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">{% endblock css %}
+{% block css %} 
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock css %}
 
 {% block content %}
 <div class="container">
@@ -82,26 +84,20 @@
             <div class="text-center px-xl-3">
               <a href="{% url "employees:create" %}"><button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal">New Employee</button></a>
             </div>
-            <hr class="my-3">
-            <div class="e-navlist e-navlist--active-bold">
-              <ul class="nav">
-                <li class="nav-item active"><a href="" class="nav-link"><span>All</span>&nbsp;<small>/&nbsp;32</small></a></li>
-                <li class="nav-item"><a href="" class="nav-link"><span>Active</span>&nbsp;<small>/&nbsp;16</small></a></li>
-                <li class="nav-item"><a href="" class="nav-link"><span>Selected</span>&nbsp;<small>/&nbsp;0</small></a></li>
-              </ul>
-            </div>
-            <hr class="my-3">
             <div>
+              <br>
               <div class="form-group">
-                <label>Date from - to:</label>
+                <label>Register Date:</label>
                 <div>
-                  <input id="dates-range" class="form-control flatpickr-input" placeholder="01 Dec 17 - 27 Jan 18" type="text" readonly="readonly">
-                </div>
+                  <input id="date-range" class="form-control" placeholder="01 Dec 17" type="date" data-flatpickr>
+              </div>
+
               </div>
               <div class="form-group">
                 <label>Search:</label>
                 <div>
                   <input class="form-control w-100" id="search-input" type="text" placeholder="Text" value="">
+                  <br>
                   <button class="btn btn-info" id="search-button">Search</button>            
                 </div>
               </div>
@@ -152,12 +148,14 @@
         function performSearch() {
             var searchText = $('#search-input').val(); 
 
-            var selectedValue = $('.custom-control-input').change().val();
+            var dateRange = $('#date-range').val();
+
+            var selectedValue = $('.custom-control-input').val();
 
             $.ajax({
                 url: '/list/', 
                 method: 'GET', 
-                data: { 'order': selectedValue, 'search': searchText }, 
+                data: { 'order': selectedValue, 'search': searchText, 'date': dateRange }, 
                 success: function(data) { 
                      $('#search-results').html($(data).find('#search-results').html());
                       $('.pagination').html($(data).find('.pagination').html());
@@ -174,13 +172,13 @@
     $('.custom-control-input').change(function() {
 
         var selectedValue = $(this).val();
-        var searchText = $("#search-input").val();
+
 
 
         $.ajax({
             url: '/list/', 
             method: 'GET', 
-            data: { 'order': selectedValue, 'search': searchText }, 
+            data: { 'order': selectedValue }, 
             success: function(data) { 
                 $('#search-results').html($(data).find('#search-results').html());
           
@@ -191,6 +189,7 @@
         });
     });
 });
+
 
   $(document).on('click', '#delete-button', function(event) {
         
@@ -214,7 +213,10 @@
                 }
             });
         });
+
 </script>
+
+
 
 
 
