@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static "css/register.css"%}">
+{% endblock css %}
+{% block title %}Create employee{% endblock title %}
+
+{% block content %}
+
+ <div class="container mt-5">
+        <h2 class="mb-4">Create employee</h2>
+        <form method="POST">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="{{form.first_name.id_for_label}}">First name:</label>
+               <input type="text" name="first_name" class="form-control" id="{{ form.first_name.id_for_label }}" placeholder="first name" required>
+            </div>
+            <div class="form-group">
+              <label for="{{form.last_name.id_for_label}}">Last name:</label>
+               <input type="text" name="last_name" class="form-control" id="{{ form.last_name.id_for_label }}" placeholder="last name" required>
+            </div>
+            <div class="form-group">
+              <label for="{{form.middle_name.id_for_label}}">Middle name:</label>
+               <input type="text" name="middle_name" class="form-control" id="{{ form.middle_name.id_for_label }}" placeholder="middle name" required>
+            </div>
+            <div class="form-group">
+              <label for="{{form.email.id_for_label}}">Email:</label>
+               <input type="text" name="email" class="form-control" id="{{ form.email.id_for_label }}" placeholder="email" required>
+            </div>
+            <div class="form-group">
+              <label for="{{form.employment_at.id_for_label}}">Employment date:</label>
+               <input type="date" name="employment_at" class="form-control" id="{{ form.employment_at.id_for_label }}" placeholder="employment at" required>
+            </div>
+            <div class="form-group">
+            <label for="id_position">Position:</label>
+            <select class="form-control" name="position" id="id_position">
+                {% for value, label in form.fields.position.choices %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+            <div class="form-group">
+              <label for="{{form.boss_id.id_for_label}}">Boss:</label>
+               <input type="text" name="boss_id" class="form-control" id="{{ form.boss_id.id_for_label }}" placeholder="boss identify" required>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-block mb-3">Create</button>
+          </div>   
+        </form>
+       
+    </div>
+{% endblock content %}

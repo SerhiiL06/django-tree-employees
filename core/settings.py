@@ -18,6 +18,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 SHOW_TOOLBAR_CALLBACK = lambda x: True
 
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",

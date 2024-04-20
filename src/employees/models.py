@@ -1,19 +1,10 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
+from .utils import POSITION_CHOICES
+
 
 class Employee(MPTTModel):
-
-    POSITION_CHOICES = (
-        ("position_1", "position_1"),
-        ("position_2", "position_2"),
-        ("position_3", "position_3"),
-        ("position_4", "position_4"),
-        ("position_5", "position_5"),
-        ("position_6", "position_6"),
-        ("position_7", "position_7"),
-        ("position_8", "position_8"),
-    )
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

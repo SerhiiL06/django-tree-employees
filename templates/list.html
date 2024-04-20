@@ -44,12 +44,9 @@
                       <td class="text-center align-middle">
                   
                         <div class="btn-group align-top">
-                          <a href="#"><button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button></a>
+                          <a href="{% url "employees:update" object.id %}"><button id="update-empl" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button></a>
                     
-                            <button id="delete-button" class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>
-                
-                          
-                            
+                            <button id="delete-button" class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>   
                         </div>
                       </td>
                       {% endif %}
@@ -83,7 +80,7 @@
         <div class="card">
           <div class="card-body">
             <div class="text-center px-xl-3">
-              <button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal">New User</button>
+              <a href="{% url "employees:create" %}"><button class="btn btn-success btn-block" type="button" data-toggle="modal" data-target="#user-form-modal">New Employee</button></a>
             </div>
             <hr class="my-3">
             <div class="e-navlist e-navlist--active-bold">

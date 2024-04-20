@@ -1,11 +1,15 @@
 from typing import Any
 
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponse
-from django.urls import reverse_lazy
 from django.db.models.query import QuerySet
-from django.views.generic import ListView, DeleteView
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from mptt.forms import MoveNodeForm
 
+from .forms import CreateEmployeeForm
 from .models import Employee
 
 
@@ -40,6 +44,45 @@ class EmployeeListView(ListView):
         return queryset
 
 
+@method_decorator(login_required, name="dispatch")
+class CreateEmployeeView(CreateView):
+    template_name = "create.html"
+    model = Employee
+    form_class = CreateEmployeeForm
+    success_url = reverse_lazy("employees:list")
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        form = CreateEmployeeForm(request.POST)
+
+        if form.is_valid():
+            boos_instance = Employee.objects.get(id=request.POST["boss_id"])
+            if boos_instance.position < form.cleaned_data.get("position"):
+                form.save()
+                return HttpResponseRedirect(reverse_lazy("employees:list"))
+
+        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+
+
+@method_decorator(login_required, name="dispatch")
+class UpdateEmployeeView(UpdateView):
+    template_name = "update.html"
+    model = Employee
+    form_class = CreateEmployeeForm
+    success_url = reverse_lazy("employees:list")
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        form = CreateEmployeeForm(request.POST)
+
+        if form.is_valid():
+            boos_instance = Employee.objects.get(id=request.POST["boss_id"])
+            if boos_instance.position < form.cleaned_data.get("position"):
+                form.save()
+                return HttpResponseRedirect(reverse_lazy("employees:list"))
+
+        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+
+
+@method_decorator(login_required, name="dispatch")
 class DeleteEmployeeView(DeleteView):
     template_name = "list.html"
     model = Employee
