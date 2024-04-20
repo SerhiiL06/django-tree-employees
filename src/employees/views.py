@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Any
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.db.transaction import atomic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -16,49 +15,36 @@ from .utils import change_boss
 
 
 class EmployeesTreeView(ListView):
-    template_name = "tree.html"
+    template_name = "employees/tree.html"
     model = Employee
 
-    def get_queryset(self) -> QuerySet[Any]:
-        if self.request.GET.get("full"):
-            queryset = Employee.objects.filter(level__lt=10)[:20000]
-        else:
-            queryset = Employee.objects.filter(level__lt=2)[:5000]
-        return queryset
+    def get_queryset(self):
+        query = super().get_queryset()
+
+        query = (
+            query.filter(level__lt=10)[:15000]
+            if self.request.GET.get("full")
+            else query.filter(level__gt=2)[:15000]
+        )
+        return query
 
 
 class EmployeeListView(ListView):
-    template_name = "list.html"
+    template_name = "employees/list.html"
     model = Employee
     paginate_by = 50
 
     def get_queryset(self) -> QuerySet[Any]:
-        queryset = super().get_queryset()
-
         params = self.request.GET
-
-        if params.get("search"):
-            search_text = params.get("search")
-            queryset = queryset.filter(
-                Q(first_name__icontains=search_text)
-                | Q(last_name__icontains=search_text)
-                | Q(middle_name__icontains=search_text)
-            )
-
-        if params.get("date"):
-            d = datetime.strptime(params.get("date"), "%Y-%m-%d").date()
-            queryset = queryset.filter(employment_at=d)
-
-        if params.get("order"):
-            order_fields = params.get("order")
-            queryset = queryset.order_by(order_fields)
-
-        return queryset
+        query = Employee.objects.search(
+            params.get("search"), params.get("date"), params.get("order")
+        )
+        return query
 
 
 @method_decorator(login_required, name="dispatch")
 class CreateEmployeeView(CreateView):
-    template_name = "create.html"
+    template_name = "employees/create.html"
     model = Employee
     form_class = CreateAndUpdateEmployeeForm
     success_url = reverse_lazy("employees:list")
@@ -68,22 +54,25 @@ class CreateEmployeeView(CreateView):
         form = CreateAndUpdateEmployeeForm(request.POST)
 
         if form.is_valid():
-            boss_instance = Employee.objects.select_for_update().get(
+
+            boss_instance = Employee.objects.select_for_update().filter(
                 id=request.POST["boss_id"]
             )
 
-            if boss_instance.position < form.cleaned_data.get("position"):
+            if boss_instance.first() and boss_instance.position < form.cleaned_data.get(
+                "position"
+            ):
                 employee = form.save(commit=False)
-                employee.boss = boss_instance
+                employee.boss = boss_instance.first()
                 employee.save()
                 return HttpResponseRedirect(reverse_lazy("employees:list"))
 
-        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+            return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
 
 @method_decorator(login_required, name="dispatch")
 class UpdateEmployeeView(UpdateView):
-    template_name = "update.html"
+    template_name = "employees/update.html"
     model = Employee
     form_class = CreateAndUpdateEmployeeForm
     success_url = reverse_lazy("employees:list")
@@ -101,9 +90,12 @@ class UpdateEmployeeView(UpdateView):
 
             if current_empl.boss_id != boss_id:
 
-                boss_instance = Employee.objects.select_for_update().get(id=boss_id)
+                boss_instance = Employee.objects.select_for_update().filter(id=boss_id)
 
-                if boss_instance.position < form.cleaned_data.get("position"):
+                if (
+                    boss_instance.first()
+                    and boss_instance.position < form.cleaned_data.get("position")
+                ):
 
                     employee.boss = boss_instance
                 else:
@@ -121,7 +113,7 @@ class UpdateEmployeeView(UpdateView):
 
 @method_decorator(login_required, name="dispatch")
 class DeleteEmployeeView(DeleteView):
-    template_name = "list.html"
+    template_name = "employees/list.html"
     model = Employee
     success_url = reverse_lazy("employees:list")
 

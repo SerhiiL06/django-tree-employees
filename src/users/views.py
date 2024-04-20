@@ -9,7 +9,7 @@ from .forms import LoginForm, RegisterForm
 
 
 class RegisterView(CreateView):
-    template_name = "register.html"
+    template_name = "users/register.html"
     model = User
     form_class = RegisterForm
     success_url = reverse_lazy("employees:list")
@@ -21,7 +21,7 @@ class RegisterView(CreateView):
 
 
 class LoginUserView(LoginView):
-    template_name = "login.html"
+    template_name = "users/login.html"
     model = User
     form_class = LoginForm
 

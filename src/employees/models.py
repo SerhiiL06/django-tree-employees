@@ -1,6 +1,8 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 
+from .managers import EmployeeManager
+
 POSITION_CHOICES = (
     ("position_1", "position_1"),
     ("position_2", "position_2"),
@@ -31,6 +33,8 @@ class Employee(MPTTModel):
         blank=True,
         related_name="workmates",
     )
+
+    objects = EmployeeManager()
 
     class MPTTMeta:
         parent_attr = "boss"

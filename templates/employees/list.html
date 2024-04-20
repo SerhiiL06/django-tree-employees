@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}Employee List{% endblock title %}Employee List
 {% block css %} 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -47,7 +47,7 @@
                   
                         <div class="btn-group align-top">
                           <a href="{% url "employees:update" object.id %}"><button id="update-empl" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button></a>
-                    
+                  
                             <button id="delete-button" class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>   
                         </div>
                       </td>
@@ -139,85 +139,11 @@
 </div> 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#search-button').click(function() {
-            performSearch(); 
-        });
 
-        function performSearch() {
-            var searchText = $('#search-input').val(); 
-
-            var dateRange = $('#date-range').val();
-
-            var selectedValue = $('.custom-control-input').val();
-
-            $.ajax({
-                url: '/list/', 
-                method: 'GET', 
-                data: { 'order': selectedValue, 'search': searchText, 'date': dateRange }, 
-                success: function(data) { 
-                     $('#search-results').html($(data).find('#search-results').html());
-                      $('.pagination').html($(data).find('.pagination').html());
-                },
-                error: function(xhr, textStatus, errorThrown) { 
-                    console.log('Помилка при виконанні Ajax запиту: ' + errorThrown);
-                }
-            });
-        }
-    });
-
-    $(document).ready(function() {
-
-    $('.custom-control-input').change(function() {
-
-        var selectedValue = $(this).val();
-
-
-
-        $.ajax({
-            url: '/list/', 
-            method: 'GET', 
-            data: { 'order': selectedValue }, 
-            success: function(data) { 
-                $('#search-results').html($(data).find('#search-results').html());
-          
-            },
-            error: function(xhr, textStatus, errorThrown) { 
-                console.log('Помилка при виконанні Ajax запиту: ' + errorThrown);
-            }
-        });
-    });
-});
-
-
-  $(document).on('click', '#delete-button', function(event) {
-        
-            event.preventDefault();
-            var emplId = $(this).val();
-            console.log(emplId)
-            $.ajax({
-                type: 'POST',
-                url: '/list/' + emplId + '/delete/',
-                data: {
-                  'pk': emplId, 
-                  csrfmiddlewaretoken: '{{ csrf_token }}',
-                        },
-                success: function(data) {
-                    $('#search-results').html($(data).find('#search-results').html());
-                    $('.pagination').html($(data).find('.pagination').html());
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.log('Помилка при відправці запиту: ' + errorThrown);
-      
-                }
-            });
-        });
-
-</script>
-
-
-
+<script src="{% static "scripts/search.js" %}"></script>
+<script src="{% static "scripts/order.js" %}"></script>
+<script src="{% static "scripts/delete.js" %}"></script>
+   
 
 
 {% endblock content %}
