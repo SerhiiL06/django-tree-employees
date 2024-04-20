@@ -1,8 +1,10 @@
 from typing import Any
-from django.db.models.query import QuerySet
+
 from django.db.models import Q
-from .models import Employee
+from django.db.models.query import QuerySet
 from django.views.generic import ListView
+
+from .models import Employee
 
 
 class EmployeesTreeView(ListView):
