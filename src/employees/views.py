@@ -1,8 +1,10 @@
 from typing import Any
 
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponse
+from django.urls import reverse_lazy
 from django.db.models.query import QuerySet
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 
 from .models import Employee
 
@@ -36,3 +38,9 @@ class EmployeeListView(ListView):
             queryset = queryset.order_by(order_fields)
 
         return queryset
+
+
+class DeleteEmployeeView(DeleteView):
+    template_name = "list.html"
+    model = Employee
+    success_url = reverse_lazy("employees:list")

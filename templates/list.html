@@ -20,42 +20,39 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th class="align-top">
-                        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0">
-                          <input type="checkbox" class="custom-control-input" id="all-items">
-                          <label class="custom-control-label" for="all-items"></label>
-                        </div>
-                      </th>
                       <th>First Name</th>
                       <th class="max-width">Last Name</th>
                       <th class="sortable">Middle Name</th>
                       <th> Registered</th>
                       <th> Position</th>
+                      {% if user.is_authenticated %}
                       <th>Actions</th>
+                      {% endif %}
                     </tr>
                   </thead>
                   <tbody id="search-results">  
                     {% for object in object_list  %}                
                     <tr>
-                      <td class="align-middle">
-                        <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                          <input type="checkbox" class="custom-control-input" id="item-12">
-                          <label class="custom-control-label" for="item-12"></label>
-                        </div>
-                      </td>
                       <td class="align-middle text-center">
-                        <div class="d-inline-flex   align-top">{{object.first_name}}</div>
+                        <div class="d-inline-flex align-top">{{object.first_name}}</div>
                       </td>
                       <td class="text-nowrap align-middle">{{object.last_name}}</td>
                       <td class="text-nowrap align-middle"><span>{{object.middle_name}}</span></td>
                       <td class="text-nowrap align-middle">{{object.employment_at}}</td>
                       <td class="text-center align-middle">{{object.position}}</td>
+                      {% if user.is_authenticated %}
                       <td class="text-center align-middle">
+                  
                         <div class="btn-group align-top">
-                            <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button>
-                            <button class="btn btn-sm btn-outline-secondary badge" type="button"><i class="fa fa-trash"></i></button>
+                          <a href="#"><button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button></a>
+                    
+                            <button id="delete-button" class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>
+                
+                          
+                            
                         </div>
                       </td>
+                      {% endif %}
                     </tr>
                     {% endfor %}  
                   </tbody>
@@ -197,6 +194,29 @@
         });
     });
 });
+
+  $(document).on('click', '#delete-button', function(event) {
+        
+            event.preventDefault();
+            var emplId = $(this).val();
+            console.log(emplId)
+            $.ajax({
+                type: 'POST',
+                url: '/list/' + emplId + '/delete/',
+                data: {
+                  'pk': emplId, 
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                        },
+                success: function(data) {
+                    $('#search-results').html($(data).find('#search-results').html());
+                    $('.pagination').html($(data).find('.pagination').html());
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('Помилка при відправці запиту: ' + errorThrown);
+      
+                }
+            });
+        });
 </script>
 
 
