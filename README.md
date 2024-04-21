@@ -8,23 +8,29 @@
 git clone https://github.com/SerhiiL06/django-tree-employees.git
 ```
 
-2. Change current repository
+2. Change current directory
 ```
 cd django-tree-employees
 ```
 
-3. Install all dependensies for this project
+3. Install all dependencies for this project
 ```
 pip install -r requirements.txt
 ```
 
 4. Enter your database data to .env_example file
-5. Load fake data from fixtures
+
+5. Do run migrate command
+```
+python manage.py migrate
+```
+
+6. Load fake data from fixtures
 ```
 python manage.py loaddata fixtures/employees.json
 ```
 
-6. Run django server
+7. Run django server
 ```
 python manage.py runserver
 ```

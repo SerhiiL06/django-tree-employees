@@ -1,13 +1,8 @@
 from datetime import datetime
-from typing import TypeVar
 
 from django.db import models
 from django.db.models import Q
 from django.db.models.query import QuerySet
-
-T = TypeVar(
-    "T",
-)
 
 
 class EmployeeManager(models.Manager):
