@@ -29,4 +29,5 @@ class Employee(MPTTModel):
     class MPTTMeta:
         parent_attr = "boss"
         ordering = ["last_name"]
+        indexes = ["last_name"]
         order_insertion_by = ["last_name"]

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#full-button').click(function (event) {
+    $('.employee').click(function (event) {
         console.log("work")
         openFull();
     });

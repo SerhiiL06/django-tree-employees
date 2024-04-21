@@ -24,11 +24,11 @@ class EmployeesTreeView(ListView):
     model = Employee
 
     def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if request.GET.get("full"):
-            object_list = self.get_queryset().filter(level__lt=9)
-            return render(request, "employees/tree.html", {"object_list": object_list})
-
-        object_list = self.get_queryset().filter(level__lt=2)
+        object_list = (
+            self.get_queryset().filter(level__lt=9)
+            if request.GET.get("full")
+            else self.get_queryset().filter(level__lt=2)
+        )
         return render(request, "employees/tree.html", {"object_list": object_list})
 
 

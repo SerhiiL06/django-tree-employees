@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load static mptt_tags  %}
 {% block title %}Employee List{% endblock title %}
+{% block css %} <link rel="stylesheet" href="{% static "css/empl.css" %}">{% endblock css %}
 
 {% block content %}   
- <button type="button"  id="full-button">Click</button>
+
 <ul class="root" id="update">
 
     {% recursetree object_list %}
@@ -12,7 +13,7 @@
             {{node.first_name}} {{node.last_name}} {{node.middle_name}}
             {% if not node.is_leaf_node %}
                 <ul class="children" >
-                    {{ children }} 
+                   <span class="employee"> {{ children }} </span>
                 </ul>
             {% endif %}
         </li>

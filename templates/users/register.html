@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block css %}<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{% static "css/register.css"%}">
+
 {% endblock css %}
 {% block title %} Register{% endblock title %}
 
@@ -31,7 +31,7 @@
               <button type="submit" class="btn btn-primary btn-block mb-3">Register</button>
               <br/>
               
-              <a href="" class="mb-3"><h6>Login?</h6></a>
+              <a href="{% url "users:login" %}" class="mb-3"><h6>Login?</h6></a>
               
            </div>
              
