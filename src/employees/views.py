@@ -1,32 +1,35 @@
-from datetime import datetime
 from typing import Any
 
 from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
 from django.db.transaction import atomic
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect,
+)
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+
 from .forms import CreateAndUpdateEmployeeForm
+from .logic import change_boss
 from .models import Employee
-from .utils import change_boss
 
 
 class EmployeesTreeView(ListView):
     template_name = "employees/tree.html"
     model = Employee
 
-    def get_queryset(self):
-        query = super().get_queryset()
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if request.GET.get("full"):
+            object_list = self.get_queryset().filter(level__lt=9)
+            return render(request, "employees/tree.html", {"object_list": object_list})
 
-        query = (
-            query.filter(level__lt=10)[:15000]
-            if self.request.GET.get("full")
-            else query.filter(level__gt=2)[:15000]
-        )
-        return query
+        object_list = self.get_queryset().filter(level__lt=2)
+        return render(request, "employees/tree.html", {"object_list": object_list})
 
 
 class EmployeeListView(ListView):
@@ -35,10 +38,7 @@ class EmployeeListView(ListView):
     paginate_by = 50
 
     def get_queryset(self) -> QuerySet[Any]:
-        params = self.request.GET
-        query = Employee.objects.search(
-            params.get("search"), params.get("date"), params.get("order")
-        )
+        query = Employee.objects.search(self.request.GET)
         return query
 
 

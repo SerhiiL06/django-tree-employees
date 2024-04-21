@@ -19,7 +19,7 @@ $(document).ready(function () {
                 $('.pagination').html($(data).find('.pagination').html());
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Помилка при виконанні Ajax запиту: ' + errorThrown);
+                console.log('Ajax error: ' + errorThrown);
             }
         });
     }

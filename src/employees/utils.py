@@ -1,10 +1,10 @@
-from .models import Employee
-
-
-def change_boss(empl_id: int, level: int) -> None:
-    new_boss = Employee.objects.filter(level=level).first()
-    employees_to_update = Employee.objects.filter(boss_id=empl_id)
-
-    for employee in employees_to_update:
-        employee.boss_id = new_boss.id
-        employee.save()
+POSITION_CHOICES = (
+    ("position_1", "position_1"),
+    ("position_2", "position_2"),
+    ("position_3", "position_3"),
+    ("position_4", "position_4"),
+    ("position_5", "position_5"),
+    ("position_6", "position_6"),
+    ("position_7", "position_7"),
+    ("position_8", "position_8"),
+)

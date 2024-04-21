@@ -16,7 +16,7 @@ $(document).ready(function () {
 
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Помилка при виконанні Ajax запиту: ' + errorThrown);
+                console.log('Ajax error: ' + errorThrown);
             }
         });
     });

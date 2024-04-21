@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('.see').click(function (event) {
+    $('#full-button').click(function (event) {
+        console.log("work")
         openFull();
     });
 
@@ -9,12 +10,12 @@ $(document).ready(function () {
             method: 'GET',
             data: { 'full': 1 },
             success: function (data) {
-                console.log('success')
+                var toUpdate = $(data).filter("#update").first();
+                $('#update').replaceWith(toUpdate);
 
-                $('.root').html(data);
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Помилка при виконанні Ajax запиту: ' + errorThrown);
+                console.log('Ajax error: ' + errorThrown);
             }
         });
     }

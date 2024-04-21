@@ -1,6 +1,7 @@
 from django import forms
 
-from .models import POSITION_CHOICES, Employee
+from .models import Employee
+from .utils import POSITION_CHOICES
 
 
 class CreateAndUpdateEmployeeForm(forms.ModelForm):

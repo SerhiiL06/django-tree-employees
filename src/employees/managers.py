@@ -5,13 +5,19 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.query import QuerySet
 
-T = TypeVar("T", str, None)
+T = TypeVar(
+    "T",
+)
 
 
 class EmployeeManager(models.Manager):
 
-    def search(self, text: T, date: T, ordering: T) -> QuerySet[any]:
+    def search(self, params: dict) -> QuerySet[any]:
         queryset = self.get_queryset()
+        text = params.get("search")
+        date = params.get("date")
+        ordering = params.get("order")
+
         if text:
             queryset = queryset.filter(
                 Q(first_name__icontains=text)

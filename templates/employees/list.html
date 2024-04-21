@@ -47,8 +47,8 @@
                   
                         <div class="btn-group align-top">
                           <a href="{% url "employees:update" object.id %}"><button id="update-empl" class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user-form-modal">Edit</button></a>
-                  
-                            <button id="delete-button" class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>   
+                            {% csrf_token %}
+                            <button id="delete-button"  class="btn btn-sm btn-outline-secondary badge" type="button" value="{{object.id}}"><i class="fa fa-trash"></i></button>   
                         </div>
                       </td>
                       {% endif %}
@@ -139,10 +139,10 @@
 </div> 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="{% static "scripts/delete.js" %}"></script>
 <script src="{% static "scripts/search.js" %}"></script>
 <script src="{% static "scripts/order.js" %}"></script>
-<script src="{% static "scripts/delete.js" %}"></script>
+
    
 
 

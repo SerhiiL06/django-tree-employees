@@ -1,5 +1,6 @@
 .env
 .venv
 Pipfile
+t.py
 Pipfile.lock
 __pycache__/
