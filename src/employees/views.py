@@ -51,7 +51,7 @@ class CreateEmployeeView(EmployeeMixin, CreateView):
         if form.is_valid():
 
             boss_instance = Employee.objects.select_for_update().filter(
-                id=request.POST["boss_id"]
+                id=request.POST.get("boss_id")
             )
 
             if self.boss_changed(boss_instance, form.cleaned_data.get("position")):
@@ -85,14 +85,14 @@ class UpdateEmployeeView(EmployeeMixin, UpdateView):
 
                 boss_instance = Employee.objects.select_for_update().filter(id=boss_id)
 
-                if not self.boss_changed(
+                if not self.correct_change(
                     boss_instance, form.cleaned_data.get("position")
                 ):
                     return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
                 employee.boss = boss_instance
 
-            if form.has_changed("position"):
+            if "position" in form.changed_data:
                 self.change_boss(employee.id, employee.level)
 
             employee.save()

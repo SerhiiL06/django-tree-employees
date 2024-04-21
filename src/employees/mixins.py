@@ -11,7 +11,7 @@ class EmployeeMixin:
     def is_changed(self, old: int, new: int) -> bool:
         return old != new
 
-    def change_boss(self, empl_id: int, level: int) -> None:
+    def correct_change(self, empl_id: int, level: int) -> None:
         new_boss = Employee.objects.filter(level=level).first()
         employees_to_update = Employee.objects.filter(boss_id=empl_id)
 
