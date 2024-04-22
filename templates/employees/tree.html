@@ -5,14 +5,14 @@
 
 {% block content %}   
 
-<ul class="root" id="update">
+<ul class="list-group root" id="update">
 
     {% recursetree object_list %}
     
-        <li>
+        <li class="list-group-item" >
             {{node.first_name}} {{node.last_name}} {{node.middle_name}}
             {% if not node.is_leaf_node %}
-                <ul class="children" >
+                <ul class="list-group children" >
                    <span class="employee"> {{ children }} </span>
                 </ul>
             {% endif %}

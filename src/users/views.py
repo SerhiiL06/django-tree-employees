@@ -15,6 +15,7 @@ class RegisterView(CreateView):
     success_url = reverse_lazy("employees:list")
 
     def get(self, request: HttpRequest, *args: str, **kwargs) -> HttpResponse:
+
         if request.user.is_authenticated:
             return redirect("employees:list")
         return super().get(request, *args, **kwargs)

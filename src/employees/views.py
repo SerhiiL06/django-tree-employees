@@ -60,7 +60,7 @@ class CreateEmployeeView(EmployeeMixin, CreateView):
                 employee.save()
                 return HttpResponseRedirect(reverse_lazy("employees:list"))
 
-            return HttpResponseRedirect(request.META["HTTP_REFERER"])
+        return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
 
 @method_decorator(login_required, name="dispatch")
