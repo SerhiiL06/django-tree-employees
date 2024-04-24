@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 
-class MainTest(TestCase):
+class RegisterTest(TestCase):
 
     def test_get_register(self):
         response = self.client.get("/register/")
@@ -39,3 +39,24 @@ class MainTest(TestCase):
 
         self.assertEqual(wrong_response.status_code, 200)
         self.assertEqual(len(users), 1)
+
+
+class LoginTest(TestCase):
+    def setUp(self) -> None:
+        User.objects.create_user(
+            "testUser", "testUser@gmail.com", "theSecretPassword"
+        ).save()
+
+    def test_get_login(self):
+        response = self.client.get("/login/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/login.html")
+        self.assertTrue(response.context.get("form"))
+
+    def test_get_login_auth_user(self):
+        self.client.login(username="testUser", password="theSecretPassword")
+        response = self.client.get("/login/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/list/")
