@@ -34,6 +34,7 @@ class EmployeeListView(ListView):
 
     def get_queryset(self) -> QuerySet[Any]:
         query = Employee.objects.search(self.request.GET)
+
         return query
 
 
@@ -49,18 +50,16 @@ class CreateEmployeeView(EmployeeMixin, CreateView):
         form = CreateAndUpdateEmployeeForm(request.POST)
 
         if form.is_valid():
-
             boss_instance = Employee.objects.select_for_update().filter(
                 id=request.POST.get("boss_id")
             )
 
-            if self.boss_changed(boss_instance, form.cleaned_data.get("position")):
+            if self.correct_boss_id(boss_instance, form.cleaned_data.get("position")):
                 employee = form.save(commit=False)
                 employee.boss = boss_instance.first()
                 employee.save()
                 return HttpResponseRedirect(reverse_lazy("employees:list"))
-
-        return HttpResponseRedirect(request.META["HTTP_REFERER"])
+        return HttpResponseRedirect(reverse_lazy("employees:create"))
 
 
 @method_decorator(login_required, name="dispatch")
@@ -85,7 +84,7 @@ class UpdateEmployeeView(EmployeeMixin, UpdateView):
 
                 boss_instance = Employee.objects.select_for_update().filter(id=boss_id)
 
-                if not self.correct_change(
+                if not self.correct_boss_id(
                     boss_instance, form.cleaned_data.get("position")
                 ):
                     return HttpResponseRedirect(request.META["HTTP_REFERER"])

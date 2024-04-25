@@ -4,14 +4,14 @@ from .models import Employee
 
 
 class EmployeeMixin:
-    def boss_changed(self, instance: QuerySet[Employee], new_position: str) -> bool:
+    def correct_boss_id(self, instance: QuerySet[Employee], new_position: str) -> bool:
         if instance.first() and instance.first().position < new_position:
             return True
 
     def is_changed(self, old: int, new: int) -> bool:
         return old != new
 
-    def correct_change(self, empl_id: int, level: int) -> None:
+    def change_boss(self, empl_id: int, level: int) -> None:
         new_boss = Employee.objects.filter(level=level).first()
         employees_to_update = Employee.objects.filter(boss_id=empl_id)
 

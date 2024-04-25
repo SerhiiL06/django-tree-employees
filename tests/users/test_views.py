@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 
 
-class RegisterTest(TestCase):
+class RegisterTestCase(TestCase):
 
     def test_get_register(self):
         response = self.client.get("/register/")
@@ -41,7 +41,7 @@ class RegisterTest(TestCase):
         self.assertEqual(len(users), 1)
 
 
-class LoginTest(TestCase):
+class LoginTestCase(TestCase):
     def setUp(self) -> None:
         User.objects.create_user(
             "testUser", "testUser@gmail.com", "theSecretPassword"
