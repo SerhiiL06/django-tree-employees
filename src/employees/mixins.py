@@ -8,8 +8,9 @@ class EmployeeMixin:
         if instance.first() and instance.first().position < new_position:
             return True
 
-    def is_changed(self, old: int, new: int) -> bool:
-        return old != new
+    def is_changed(self, old: int, new: int | None) -> bool:
+
+        return bool(new and old != new)
 
     def change_boss(self, empl_id: int, level: int) -> None:
 

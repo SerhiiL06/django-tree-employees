@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
 from django.db.transaction import atomic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
@@ -72,15 +72,15 @@ class UpdateEmployeeView(EmployeeMixin, UpdateView):
     @atomic
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
 
-        current_empl = self.get_object()
-        form = CreateAndUpdateEmployeeForm(instance=current_empl, data=request.POST)
+        before_update = self.get_object()
+        form = CreateAndUpdateEmployeeForm(instance=before_update, data=request.POST)
 
         if form.is_valid():
 
             boss_id = form.cleaned_data.get("boss_id")
             employee = form.save(commit=False)
 
-            if self.is_changed(boss_id, employee.boss_id):
+            if self.is_changed(before_update.boss_id, boss_id):
 
                 boss_instance = Employee.objects.select_for_update().filter(id=boss_id)
 
@@ -89,7 +89,9 @@ class UpdateEmployeeView(EmployeeMixin, UpdateView):
                 ):
                     return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
-                employee.boss = boss_instance
+                employee.boss_id = (
+                    boss_instance.first().id if boss_id else before_update.boss_id
+                )
 
             if "position" in form.changed_data:
                 self.change_boss(employee.id, employee.level)
@@ -106,6 +108,9 @@ class DeleteEmployeeView(EmployeeMixin, DeleteView):
     template_name = "employees/list.html"
     model = Employee
     success_url = reverse_lazy("employees:list")
+
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        return redirect("employees:list")
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         level = self.get_object().level
