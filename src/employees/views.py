@@ -108,6 +108,7 @@ class DeleteEmployeeView(EmployeeMixin, DeleteView):
     success_url = reverse_lazy("employees:list")
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        employee_to_delete = self.get_object()
-        self.change_boss(employee_to_delete.id, employee_to_delete.level)
-        return super().post(request, *args, **kwargs)
+        level = self.get_object().level
+        self.change_boss(kwargs.get("pk"), level)
+        response = super().post(request, *args, **kwargs)
+        return response

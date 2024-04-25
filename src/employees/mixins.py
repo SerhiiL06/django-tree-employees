@@ -12,9 +12,10 @@ class EmployeeMixin:
         return old != new
 
     def change_boss(self, empl_id: int, level: int) -> None:
-        new_boss = Employee.objects.filter(level=level).first()
+
+        new_boss = Employee.objects.filter(level__lt=level).first()
         employees_to_update = Employee.objects.filter(boss_id=empl_id)
 
         for employee in employees_to_update:
-            employee.boss_id = new_boss.id
+            employee.boss = new_boss
             employee.save()

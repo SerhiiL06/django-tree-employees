@@ -1,8 +1,10 @@
-from django.test import TestCase
-from src.employees.models import Employee
 from datetime import datetime, timedelta
+
 from django.contrib.auth.models import User
+from django.test import TestCase
 from django.urls import reverse
+
+from src.employees.models import Employee
 
 
 class EmployeeListTestCase(TestCase):
@@ -141,3 +143,18 @@ class EmployeeActionsTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
         self.assertRedirects(response, "/create/")
+
+    def test_delete_employee(self):
+        response = self.client.post("/list/3/delete/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/login/?next=/list/3/delete/")
+
+        self.client.login(username="testUser", password="superSecurePassword")
+
+        response = self.client.post("/list/9/delete/")
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/list/")
+
+        # check changed boss function
+        self.assertTrue(Employee.objects.get(id=10).boss_id)

@@ -1,6 +1,8 @@
-from src.employees.forms import CreateAndUpdateEmployeeForm
-from django.test import TestCase
 from datetime import datetime
+
+from django.test import TestCase
+
+from src.employees.forms import CreateAndUpdateEmployeeForm
 
 
 class FormTestCase(TestCase):
