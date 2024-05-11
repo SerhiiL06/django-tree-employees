@@ -1,5 +1,5 @@
 from django.db.models.query import QuerySet
-
+from typing import Optional
 from .models import Employee
 
 
@@ -8,9 +8,9 @@ class EmployeeMixin:
         if instance.first() and instance.first().position < new_position:
             return True
 
-    def is_changed(self, old: int, new: int | None) -> bool:
+    def is_changed(self, old_id: int, new_id: Optional[int]) -> bool:
 
-        return bool(new and old != new)
+        return bool(new_id and old_id != new_id)
 
     def change_boss(self, empl_id: int, level: int) -> None:
 

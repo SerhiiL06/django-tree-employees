@@ -1,17 +1,16 @@
 from typing import Any
 
-from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
 from django.db.transaction import atomic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from .forms import CreateAndUpdateEmployeeForm
 from .mixins import EmployeeMixin
 from .models import Employee
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class EmployeesTreeView(ListView):
@@ -33,13 +32,10 @@ class EmployeeListView(ListView):
     paginate_by = 50
 
     def get_queryset(self) -> QuerySet[Any]:
-        query = Employee.objects.search(self.request.GET)
-
-        return query
+        return Employee.objects.search(self.request.GET)
 
 
-@method_decorator(login_required, name="dispatch")
-class CreateEmployeeView(EmployeeMixin, CreateView):
+class CreateEmployeeView(LoginRequiredMixin, EmployeeMixin, CreateView):
     template_name = "employees/create.html"
     model = Employee
     form_class = CreateAndUpdateEmployeeForm
@@ -59,11 +55,11 @@ class CreateEmployeeView(EmployeeMixin, CreateView):
                 employee.boss = boss_instance.first()
                 employee.save()
                 return HttpResponseRedirect(reverse_lazy("employees:list"))
+
         return HttpResponseRedirect(reverse_lazy("employees:create"))
 
 
-@method_decorator(login_required, name="dispatch")
-class UpdateEmployeeView(EmployeeMixin, UpdateView):
+class UpdateEmployeeView(LoginRequiredMixin, EmployeeMixin, UpdateView):
     template_name = "employees/update.html"
     model = Employee
     form_class = CreateAndUpdateEmployeeForm
@@ -103,8 +99,7 @@ class UpdateEmployeeView(EmployeeMixin, UpdateView):
         return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
 
-@method_decorator(login_required, name="dispatch")
-class DeleteEmployeeView(EmployeeMixin, DeleteView):
+class DeleteEmployeeView(LoginRequiredMixin, EmployeeMixin, DeleteView):
     template_name = "employees/list.html"
     model = Employee
     success_url = reverse_lazy("employees:list")
