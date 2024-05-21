@@ -1,0 +1,9 @@
+{% if error_list %}
+          <div class="alert-danger">
+            <ul>
+              {% for message in error_list %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+{% endif %}

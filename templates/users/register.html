@@ -9,6 +9,8 @@
 
  <div class="container mt-5">
         <h2 class="mb-4">Register form</h2>
+      {% include "messages/error-message-block.html" %}
+
         <form action="{%url "users:register"%}" method="POST">
           {% csrf_token %}
             <div class="form-group">

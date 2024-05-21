@@ -1,7 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
@@ -19,6 +20,18 @@ class RegisterView(CreateView):
         if request.user.is_authenticated:
             return redirect("employees:list")
         return super().get(request, *args, **kwargs)
+
+    def post(self, request: HttpRequest, *args: str, **kwargs) -> HttpResponse:
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Success register")
+            return redirect("employees:list")
+
+        errors = form.error_messages.values()
+
+        return render(request, self.get_template_names(), {"error_list": errors})
 
 
 class LoginUserView(LoginView):

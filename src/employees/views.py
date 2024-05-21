@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
 from django.db.transaction import atomic
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -10,7 +11,6 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from .forms import CreateAndUpdateEmployeeForm
 from .mixins import EmployeeMixin
 from .models import Employee
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class EmployeesTreeView(ListView):
