@@ -8,6 +8,7 @@
 
  <div class="container mt-5">
         <h2 class="mb-4">Login form</h2>
+        {% include "messages/error-message-block.html" %}
         <form action="{%url "users:login"%}" method="POST">
           {% csrf_token %}
             <div class="form-group">

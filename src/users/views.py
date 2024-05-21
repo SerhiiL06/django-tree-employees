@@ -29,9 +29,7 @@ class RegisterView(CreateView):
             messages.success(request, "Success register")
             return redirect("employees:list")
 
-        errors = list(form.error_messages.values())
-
-        return render(request, self.get_template_names(), {"error_list": errors})
+        return render(request, self.get_template_names(), {"form": form})
 
 
 class LoginUserView(LoginView):
