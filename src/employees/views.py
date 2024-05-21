@@ -23,6 +23,7 @@ class EmployeesTreeView(ListView):
             if request.GET.get("full")
             else self.get_queryset().filter(level__lt=2)
         )
+
         return render(request, "employees/tree.html", {"object_list": object_list})
 
 

@@ -25,5 +25,7 @@ class EmployeeManager(models.Manager):
 
         if ordering:
             queryset = queryset.order_by(ordering)
+        else:
+            queryset = queryset.order_by("last_name")
 
         return queryset

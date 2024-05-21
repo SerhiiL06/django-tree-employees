@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('.employee').click(function (event) {
-        console.log("work")
         openFull();
     });
 

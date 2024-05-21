@@ -54,32 +54,18 @@
                       {% endif %}
                     </tr>
                     {% endfor %}  
+                    {% else %}
+                    <h2>not a single employee at the moment</h2>
                     {% endif %}
                   </tbody>
                 </table>
               </div>
-              <div class="pagination d-flex justify-content-center" >
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+              {% include "employees/pagination.html" %}
             </div>
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-3 mb-3">
+      <div class="col-12 col-lg-3 mb-3" id='left-block'>
         <div class="card">
           <div class="card-body">
             <div class="text-center px-xl-3">
@@ -104,33 +90,10 @@
               </div>
             </div>
             <hr class="my-3">
-            <div class="">
-              <label>Order By:</label>
-              <div class="px-2">
-                <div class="custom-control custom-radio">
-                  <input type="radio" class="custom-control-input" name="first-name" id="order-by-first" value="first_name">
-                  <label class="custom-control-label"  for="order-by-first">First Name</label>
-                </div>
-              </div>
-              <div class="px-2">
-                <div class="custom-control custom-radio">
-                  <input type="radio" class="custom-control-input" name="last-name" id="order-by-last" checked="" value="last_name">
-                  <label class="custom-control-label" for="order-by-last">Last Name</label>
-                </div>
-              </div>
-              <div class="px-2">
-                <div class="custom-control custom-radio">
-                  <input type="radio" class="custom-control-input" name="order-by-middle" id="order-by-middle" value="middle_name">
-                  <label class="custom-control-label" for="order-by-middle" value="middle">Middle Name</label>
-                </div>
-              </div>
-            </div>
-             <div class="px-2">
-                <div class="custom-control custom-radio">
-                  <input type="radio" class="custom-control-input" name="registered" id="order-by-registered" value="employment_at">
-                  <label class="custom-control-label" for="order-by-registered">Registered</label>
-                </div>
-              </div>
+            {% include "employees/ordering.html" %}
+
+            <hr>
+             <button class="btn btn-warning" id="clear-button">Clear filters</button> 
             </div>
           </div>
         </div>
@@ -141,6 +104,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static "scripts/delete.js" %}"></script>
+<script src="{% static "scripts/clear.js" %}"></script>
 <script src="{% static "scripts/search.js" %}"></script>
 <script src="{% static "scripts/order.js" %}"></script>
 

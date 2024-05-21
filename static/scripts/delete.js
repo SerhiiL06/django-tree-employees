@@ -2,9 +2,7 @@ $(document).on('click', '#delete-button', function (event) {
 
     event.preventDefault();
     var emplId = $(this).val();
-    console.log(emplId)
     var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    console.log(csrftoken)
     $.ajax({
         type: 'POST',
         url: '/list/' + emplId + '/delete/',
