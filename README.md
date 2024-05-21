@@ -18,22 +18,32 @@ cd django-tree-employees
 pip install -r requirements.txt
 ```
 
-4. Enter your database data to .env_example file
+4. Create database using psql or another UI
+``` 
+CREATE DATABASE <db_name> WITH owner <owner_name>
+```
 
-5. Do run migrate command
+5. Rename env file
+```
+mv .env_example .env
+```
+
+6. Enter your database connection data in the .env file
+
+7. Do run migrate command
 ```
 python manage.py migrate
 ```
 
-6. Load fake data from fixtures
+7. Load fake data from fixtures
 ```
 python manage.py loaddata fixtures/employees.json
 ```
 
-7. Run django server
+8. Run django server
 ```
 python manage.py runserver
-```
+```å
 
 
 <h2>Usage</h2>

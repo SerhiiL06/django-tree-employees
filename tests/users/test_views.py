@@ -39,6 +39,10 @@ class RegisterTestCase(TestCase):
 
         self.assertEqual(wrong_response.status_code, 200)
         self.assertEqual(len(users), 1)
+        self.assertEqual(
+            wrong_response.context["error_list"],
+            ["The two password fields didn’t match."],
+        )
 
 
 class LoginTestCase(TestCase):
