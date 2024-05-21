@@ -29,6 +29,9 @@ mv .env_example .env
 ```
 
 6. Enter your database connection data in the .env file
+```
+nano .env
+```
 
 7. Do run migrate command
 ```
@@ -43,7 +46,7 @@ python manage.py loaddata fixtures/employees.json
 8. Run django server
 ```
 python manage.py runserver
-```å
+```
 
 
 <h2>Usage</h2>
